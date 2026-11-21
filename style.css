@@ -43,3 +43,9 @@ details{background:#fff;border-radius:14px;padding:16px 20px;margin-bottom:12px;
 .ws .price div{background:#ffffff1c}.ws .price b{color:#f2c466}.ws .chips span{background:#ffffff1c;color:#fff}.ws img{border-radius:18px;max-width:380px;margin:auto;box-shadow:0 14px 50px #0006}
 .badge{display:inline-block;background:var(--g);color:#fff;padding:4px 16px;border-radius:30px;font-size:13px;font-weight:600;margin-bottom:12px}
 .faq{max-width:780px;margin:auto}
+.btn.wa-btn{background:#25d366}.btn.wa-btn:hover{background:#1aa84f}
+.wlink{display:inline-block;margin-top:12px;color:#128c4a;font-weight:600;font-size:14px}.wlink:hover{text-decoration:underline}
+.mbar{display:none}
+@media(max-width:820px){.mbar{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:11;box-shadow:0 -4px 16px #0003}
+.mbar a{flex:1;text-align:center;padding:14px;color:#fff;font-weight:600}.mbar a:first-child{background:var(--p)}.mbar a:last-child{background:#25d366}
+.wa{display:none}body{padding-bottom:50px}}
