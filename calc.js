@@ -1,42 +1,45 @@
 /* ===== EDIT PRICING HERE =====
-   cons = grams per sq ft, price = ₹ per kg (material) | svc rows: price = ₹ per sq ft
-   NOTE: "industrial" matches the original costing chart. The other 3 systems use PLACEHOLDER figures – replace with real rates. */
+   Consumption follows the Taj Epoxy "Material Calculation Sheet":
+   Primer 5 gm/sqft (R:H 2:1) · Screed 150 gm/sqft (R:S:H) · Top coat 150 gm/sqft (finish ratio)
+   Prices: ₹ per kg for materials, ₹ per sq ft for professional charges.
+   NOTE: Industrial prof. charge (130) is from the original chart; the other 3 systems' charges are PLACEHOLDERS. */
+const PER={primer:5,screed:150,top:150};
+const PRICE={rhBase:380,sand:25,pigment:700,rhTop:650};
+const SCREED=[['2 : 2 : 1 (5 Parts)',[2,2,1]],['2 : 4 : 1 (7 Parts)',[2,4,1]],['2 : 6 : 1 (9 Parts)',[2,6,1]]]; // [Resin, Sand, Hardener]
+const TOP=[{l:'Marble',x:'Pigment',r:[2,2,1]},{l:'Metallic',x:'',r:[2,0,1],n:'incl. metallic powder (as per shade)'},{l:'3D Epoxy',x:'',r:[3,0,1],n:'colour only in 1 pint'}]; // [Resin, Colour, Hardener]
 const SYSTEMS=[
-{id:'industrial',name:'Industrial Epoxy Flooring',thick:'5mm',cond:'Floor Condition — Tiles - Stone',steps:[
- {p:'Primer',i:'R+H',r:[['R+H',5,380]]},
- {p:'Screed For 2mm',i:'R+H+F+P',r:[['R+H',100,380],['610 Filler',200,25],['Pigment',3,700]]},
- {p:'Topcoat With Filler For 1mm',i:'R+H+F+P',r:[['R+H',75,650],['710 Filler',50,25],['Pigment',3,700]]},
- {p:'Professional Charges',i:'—',r:[['Professional Charges',0,130,1]]}]},
-{id:'italian',name:'Italian Epoxy Flooring',thick:'4mm',cond:'Floor Condition — Tiles - Stone',steps:[ /* PLACEHOLDER */
- {p:'Primer',i:'R+H',r:[['R+H',5,380]]},
- {p:'Screed For 2mm',i:'R+H+F+P',r:[['R+H',90,380],['610 Filler',180,25],['Pigment',3,700]]},
- {p:'Italian Topcoat For 1mm',i:'R+H+P',r:[['R+H',80,750],['Pigment',4,700]]},
- {p:'Professional Charges',i:'—',r:[['Professional Charges',0,140,1]]}]},
-{id:'metallic',name:'Metallic Epoxy Flooring',thick:'4.5mm',cond:'Floor Condition — Tiles - Stone',steps:[ /* PLACEHOLDER */
- {p:'Primer',i:'R+H',r:[['R+H',5,380]]},
- {p:'Screed For 2mm',i:'R+H+F+P',r:[['R+H',100,380],['610 Filler',200,25],['Pigment',3,700]]},
- {p:'Metallic Coat For 1.5mm',i:'R+H+MP',r:[['R+H',110,650],['Metallic Pigment',10,2500]]},
- {p:'Professional Charges',i:'—',r:[['Professional Charges',0,160,1]]}]},
-{id:'flakes',name:'3D / Flakes / Granules / Digital Paper Epoxy',thick:'5.5mm',cond:'Floor Condition — Tiles - Stone',steps:[ /* PLACEHOLDER */
- {p:'Primer',i:'R+H',r:[['R+H',5,380]]},
- {p:'Screed For 2mm',i:'R+H+F+P',r:[['R+H',100,380],['610 Filler',200,25],['Pigment',3,700]]},
- {p:'Flakes / 3D Layer',i:'R+H+Flakes',r:[['R+H',120,650],['Flakes / Digital Paper',40,400]]},
- {p:'Professional Charges',i:'—',r:[['Professional Charges',0,180,1]]}]}];
+{name:'Industrial Epoxy Flooring',thick:'5mm',top:0,pc:130},
+{name:'Italian Epoxy Flooring',thick:'4mm',top:0,pc:140},
+{name:'Metallic Epoxy Flooring',thick:'4.5mm',top:1,pc:160},
+{name:'3D / Flakes / Granules / Digital Paper Epoxy',thick:'5.5mm',top:2,pc:180}];
 const $=s=>document.querySelector(s),f=(n,d=2)=>n.toLocaleString('en-IN',{maximumFractionDigits:d});
 let cur=0,area=1000;
+$('#sc').innerHTML=SCREED.map((s,i)=>`<option value="${i}">${s[0]}</option>`).join('');
+$('#tc').innerHTML=TOP.map((t,i)=>`<option value="${i}">${t.l} (${t.r.filter(x=>x).join(' : ')})</option>`).join('');
+function steps(){
+ const sc=SCREED[+$('#sc').value],tp=TOP[+$('#tc').value];
+ const split=(per,[r,m,h])=>{const s=r+m+h;return{rh:per*(r+h)/s,res:per*r/s,har:per*h/s,mid:per*m/s}};
+ const sp=split(PER.screed,sc[1]),tt=split(PER.top,tp.r);
+ const rh=(o,n)=>['R+H',o.rh,0,`Resin ${f(o.res,1)} · Hardener ${f(o.har,1)} gm`];
+ return[
+ {p:'Primer',i:'R+H (2 : 1)',r:[['R+H',PER.primer,PRICE.rhBase,0,`Resin ${f(PER.primer*2/3,1)} · Hardener ${f(PER.primer/3,1)} gm`]]},
+ {p:'Screed Layer',i:'R+S+H ('+sc[0].split(' (')[0]+')',r:[['R+H',sp.rh,PRICE.rhBase,0,`Resin ${f(sp.res,1)} · Hardener ${f(sp.har,1)} gm`],['Sand',sp.mid,PRICE.sand]]},
+ {p:'Top Coat – '+tp.l,i:(tp.x?'R+P+H':'R+H')+' ('+tp.r.filter(x=>x).join(' : ')+')',r:[['R+H',tt.rh,PRICE.rhTop,0,`Resin ${f(tt.res,1)} · Hardener ${f(tt.har,1)} gm`+(tp.n?` · ${tp.n}`:'')]].concat(tp.x?[[tp.x,tt.mid,PRICE.pigment]]:[])},
+ {p:'Professional Charges',i:'—',r:[['Professional Charges',0,SYSTEMS[cur].pc,1]]}]}
 function render(){
  const S=SYSTEMS[cur];let total=0,h='';
- S.steps.forEach((st,n)=>st.r.forEach((r,k)=>{
-  const svc=r[3],use=svc?area:r[1]*area/1000,t=use*r[2];total+=t;
-  h+=`<tr>${k?'':`<td rowspan="${st.r.length}">${n+1}</td><td rowspan="${st.r.length}">${st.p}</td><td rowspan="${st.r.length}">${st.i}</td>`}<td>${r[0]}</td><td>${f(area)}</td><td>${svc?'—':f(r[1])}</td><td>${f(use)}</td><td>${f(r[2])}</td><td><b>${f(t)}</b></td></tr>`}));
- $('#title').textContent=`${S.name} (${S.thick})`;$('#cond').textContent=S.cond;$('#rows').innerHTML=h;
+ steps().forEach((st,n)=>st.r.forEach((r,k)=>{
+  const svc=r[3]===1,use=svc?area:r[1]*area/1000,t=use*r[2];total+=t;
+  h+=`<tr>${k?'':`<td rowspan="${st.r.length}">${n+1}</td><td rowspan="${st.r.length}">${st.p}</td><td rowspan="${st.r.length}">${st.i}</td>`}<td>${r[0]}${r[4]?`<br><small>${r[4]}</small>`:''}</td><td>${f(area)}</td><td>${svc?'—':f(r[1],1)}</td><td>${f(use)}</td><td>${f(r[2])}</td><td><b>${f(t)}</b></td></tr>`}));
+ $('#title').textContent=`${S.name} (${S.thick})`;$('#cond').textContent='Floor Condition — Tiles - Stone';$('#rows').innerHTML=h;
  const per=total/area;$('#tp').textContent=f(total);$('#sq').textContent=f(area);$('#ps').textContent=f(per,1);
  $('#tabs').innerHTML=SYSTEMS.map((s,i)=>`<button class="tab${i==cur?' on':''}" data-i="${i}">${s.name} (${s.thick})</button>`).join('');
  document.querySelectorAll('.pre').forEach(b=>b.classList.toggle('on',+b.dataset.v==area));
- const q=$('#quote');q.href=`https://wa.me/${WA_NUMBER}?text=`+encodeURIComponent(`Hi Taj Epoxy, I need a detailed quote.\nSystem: ${S.name} (${S.thick})\nArea: ${f(area)} sq ft\nEstimated cost: ₹${f(total)} (₹${f(per,1)}/sq ft)`);
+ const q=$('#quote');q.href=`https://wa.me/${WA_NUMBER}?text=`+encodeURIComponent(`Hi Taj Epoxy, I need a detailed quote.\nSystem: ${S.name} (${S.thick})\nScreed: ${SCREED[+$('#sc').value][0]}\nTop coat: ${TOP[+$('#tc').value].l}\nArea: ${f(area)} sq ft\nEstimated cost: ₹${f(total)} (₹${f(per,1)}/sq ft)`);
 }
-$('#tabs').onclick=e=>{const b=e.target.closest('.tab');if(b){cur=+b.dataset.i;render()}};
+$('#tabs').onclick=e=>{const b=e.target.closest('.tab');if(b){cur=+b.dataset.i;$('#tc').value=SYSTEMS[cur].top;render()}};
+$('#sc').onchange=$('#tc').onchange=render;
 $('#area').oninput=e=>{area=Math.max(1,+e.target.value||0)||1;render()};
 $('#pres').innerHTML=[250,500,1000,2500,5000].map(v=>`<button class="pre" data-v="${v}">${f(v)}</button>`).join('');
 $('#pres').onclick=e=>{const b=e.target.closest('.pre');if(b){area=+b.dataset.v;$('#area').value=area;render()}};
-render();
+$('#tc').value=SYSTEMS[0].top;render();
