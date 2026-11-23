@@ -117,3 +117,7 @@ footer{background:#fff;color:var(--m);border-top:1px solid #eee6f6}footer h4{col
 .thumb{max-width:220px;border-radius:12px;margin-top:8px;border:1px solid #eee6f6}.pvbox{position:sticky;top:90px}.pvbox .ws{border:1px solid #eee6f6;border-radius:16px;padding:24px 0}.pvbox .w{padding:0 18px}
 .adm-card ol{padding-left:20px;font-size:14px;color:var(--m)}.adm-card ol li{margin-bottom:6px}.adm-card code{background:var(--pl);padding:1px 6px;border-radius:6px;color:var(--pd)}
 @media(max-width:560px){.fg{grid-template-columns:1fr}}
+.wl{display:grid;gap:8px;margin-bottom:14px}.wl button{text-align:left;background:#fff;border:1.5px solid #e6dcf3;border-radius:12px;padding:10px 14px;font:inherit;cursor:pointer;display:grid;gap:2px;color:var(--t)}
+.wl button small{color:var(--m)}.wl button.on{border-color:var(--p);background:var(--pl)}.acts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.acts .btn{padding:7px 16px;font-size:13px;cursor:pointer}
+.wsb{padding:46px 0;border-bottom:1px solid #f0e9f9;scroll-margin-top:80px}.wsb:last-child{border-bottom:0}.rev>div:first-child{order:2}
+@media(max-width:820px){.rev>div:first-child{order:0}}
