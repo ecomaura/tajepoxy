@@ -13,3 +13,7 @@ document.querySelectorAll('form[data-wa-form]').forEach(f=>f.addEventListener('s
   d.forEach((v,k)=>{if(v)t+=`${f.querySelector(`[name="${k}"]`).dataset.label||k}: ${v}\n`});
   window.open(waLink(t.trim()),'_blank');
 }));
+
+// Lightbox for gallery images
+(()=>{const g=document.querySelectorAll('.gal img');if(!g.length)return;const l=document.createElement('div');l.className='lb';l.innerHTML='<img alt="">';document.body.appendChild(l);
+g.forEach(i=>i.onclick=()=>{l.querySelector('img').src=i.src;l.querySelector('img').alt=i.alt;l.classList.add('on')});l.onclick=()=>l.classList.remove('on');document.addEventListener('keydown',e=>e.key==='Escape'&&l.classList.remove('on'))})();
