@@ -18,13 +18,13 @@ function single(d){return `<div class="w grid g2"><div>${d.badge?`<span class="b
 <p style="font-size:22px;font-weight:600;margin-bottom:6px">${meta(d)}</p><div class="chips" style="margin-bottom:6px">${chips(d.styles)}</div>${price(d)}<div class="chips">${chips(d.perks,1)}</div><br>
 ${bookBtn(d,'Book Your Seat')} <a class="btn o" href="workshop.html#${sid(d)}">Full Details</a>
 <p style="margin-top:14px;font-size:14px"><i class="i i-phone"></i>${esc(d.phone)}${d.payNote?' · '+esc(d.payNote):''}</p></div><img src="${esc(d.image)}" alt="${esc(d.title)}"></div>`}
-function card(d){return `<div class="card"><a href="workshop.html#${sid(d)}"><img class="cimg" style="height:230px" src="${esc(d.image)}" alt="${esc(d.title)}" loading="lazy"></a><div class="b">${d.badge?`<span class="badge"><i class="i i-flame"></i>${esc(d.badge)}</span>`:''}
+function card(d){return `<div class="card"><a href="workshop.html#${sid(d)}"><img class="cimg" style="height:auto" src="${esc(d.image)}" alt="${esc(d.title)}" loading="lazy"></a><div class="b">${d.badge?`<span class="badge"><i class="i i-flame"></i>${esc(d.badge)}</span>`:''}
 <h3><a href="workshop.html#${sid(d)}">${esc(d.title)}</a></h3><p style="font-weight:600;color:var(--t);margin:6px 0">${meta(d)}</p><p><b style="color:var(--p)">₹${esc(d.fee)}/-</b> fee · ₹${esc(d.booking)}/- booking</p>
 <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">${bookBtn(d,'Book Seat')}<a class="btn o" href="workshop.html#${sid(d)}">Details</a></div></div></div>`}
 function renderHome(l,el){
   if(!el)return;const v=vis(l).filter(w=>w.showOnHome!==false);
   el.style.display=v.length?'':'none';
-  el.innerHTML=v.length===1?single(v[0]):`<div class="w c"><h2>Upcoming Workshops</h2><p class="sub">Learn professional techniques &amp; start your high-profit business.</p><div class="grid g3" style="text-align:left">${v.map(card).join('')}</div><br><a class="btn" href="workshop.html">View All Workshops</a></div>`;
+  el.innerHTML=v.length===1?single(v[0]):`<div class="w c"><h2>Upcoming Workshops</h2><p class="sub">Learn professional techniques &amp; start your high-profit business.</p><div class="wsgrid" style="text-align:left">${v.map(card).join('')}</div><br><a class="btn" href="workshop.html">View All Workshops</a></div>`;
 }
 function block(d,multi,i){return `<div class="wsb" id="${sid(d)}"><div class="w grid g2${i%2?' rev':''}"><div>${d.badge?`<span class="badge"><i class="i i-flame"></i>${esc(d.badge)}</span>`:''}
 ${multi?`<h2>${esc(d.title)}</h2><p class="sub" style="margin-bottom:10px">${esc(d.tagline)}</p><p style="font-weight:600;font-size:18px;margin-bottom:10px">${meta(d)}</p>`:`<h2>${esc(d.dates)} · ${esc(d.location)}</h2>`}
@@ -47,5 +47,5 @@ function renderPage(l){
 const load=()=>fetch('data/workshops.json?v='+Date.now()).then(r=>r.ok?r.json():{}).catch(()=>({})).then(j=>Array.isArray(j.workshops)?j.workshops.map((w,i)=>Object.assign({},DEFAULT,{id:'w'+(i+1)},w)):[DEFAULT]);
 window.WS={DEFAULT,renderHome,renderPage,load,list,esc};
 const home=document.getElementById('ws-home');
-if(home||document.getElementById('ws-main')){const go=l=>{renderHome(l,home);renderPage(l)};go([DEFAULT]);load().then(go)}
+if(home||document.getElementById('ws-main')){const go=l=>{renderHome(l,home);renderPage(l)};load().then(go)}
 })();
