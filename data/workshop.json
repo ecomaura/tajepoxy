@@ -1,0 +1,16 @@
+{
+  "title": "Resin Table / Epoxy Flooring Workshop",
+  "tagline": "Learn Professional Techniques & Start Your High Profit Business",
+  "badge": "Seats Limited",
+  "dates": "3, 4, 5 December",
+  "location": "Delhi",
+  "fee": "14,999",
+  "booking": "2,000",
+  "description": "Hands-on training covering 3D, marble, metallic, industrial, flake and parking flooring, plus resin tables.",
+  "styles": ["3D Flooring", "Marble Finish", "Metallic Finish", "Industrial Flooring", "Flakes & Granular Finish", "Parking Flooring"],
+  "perks": ["Practical Training", "Expert Guidance", "Business Support", "Certificate Provided"],
+  "payNote": "Pay via G Pay / UPI",
+  "phone": "9920899998",
+  "image": "assets/workshop-flyer.jpg",
+  "showOnHome": true
+}

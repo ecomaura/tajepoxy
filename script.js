@@ -11,7 +11,7 @@ document.querySelectorAll('form[data-wa-form]').forEach(f=>f.addEventListener('s
   e.preventDefault();
   const d=new FormData(f);let t=f.dataset.waForm+'\n';
   d.forEach((v,k)=>{if(v)t+=`${f.querySelector(`[name="${k}"]`).dataset.label||k}: ${v}\n`});
-  window.open(waLink(t.trim()),'_blank');
+  window.open(f.dataset.waNumber?`https://wa.me/${f.dataset.waNumber}?text=${encodeURIComponent(t.trim())}`:waLink(t.trim()),'_blank');
 }));
 
 // Lightbox for gallery images
